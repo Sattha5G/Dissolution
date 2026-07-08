@@ -41,11 +41,6 @@ let isInvertColor = false, isDilate = false, isBinarize = false;
 let binarizeThreshold = 50;
 let blurImageRadius = 0;
 
-// Anki
-let ankiModelFieldMap = {}, fieldValueMap = {};
-let savedAnkiCardModels = [];
-let ankiDecks, ankiModels, ankitags, selectedDeck, selectedModel;
-let modelFieldsNeedLoad = false;
 let isResizeScreenshot = false;
 let resizeScreenshotMaxWidth = 1280;
 let resizeScreenshotMaxHeight = 720;
@@ -79,7 +74,6 @@ init();
 function init() {
   (async() => {
     loadProfiles();
-    loadAnki();
   })();
 }
 
@@ -457,17 +451,17 @@ function closeSettings() {
   setTimeout(()=>settingsDialog.hidden = true, 300);
 }
 
-function openAnkiSettingsDialog() {
-  ankiSettingsDialog.hidden = false;
-  if (!ankiSettingsDialog.showModal) {
-    dialogPolyfill.registerDialog(ankiSettingsDialog);
+function openDictionarySettingsDialog() {
+  dictionarySettingsDialog.hidden = false;
+  if (!dictionarySettingsDialog.showModal) {
+    dialogPolyfill.registerDialog(dictionarySettingsDialog);
   }
-  setTimeout(()=>ankiSettingsDialog.showModal(), 300);
+  setTimeout(()=>dictionarySettingsDialog.showModal(), 300);
 }
 
-function closeAnkiSettingsDialog() {
-  ankiSettingsDialog.close();
-  setTimeout(()=>ankiSettingsDialog.hidden = true, 300);
+function closeDictionarySettingsDialog() {
+  dictionarySettingsDialog.close();
+  setTimeout(()=>dictionarySettingsDialog.hidden = true, 300);
 }
 
 function openClipboardSettings() {
@@ -505,8 +499,8 @@ document.addEventListener("keydown", function(event) {
     if (!texthookerSettingsDialog.hidden) {
       setTimeout(()=>texthookerSettingsDialog.hidden = true, 300);
     }
-    if (!ankiSettingsDialog.hidden) {
-      setTimeout(()=>ankiSettingsDialog.hidden = true, 300);
+    if (!dictionarySettingsDialog.hidden) {
+      setTimeout(()=>dictionarySettingsDialog.hidden = true, 300);
     }
   }
 });
@@ -800,60 +794,6 @@ function preprocessImage(canvas) {
     thresholdFilter(processedImageData.data, binarizeThreshold/100);
   }
   return processedImageData;
-}
-
-/*
- *
- Anki Integration
- *
-*/
-
-async function loadAnki() {
-  ankiDecks = await initDecks();
-  ankiModels = await initCardModels();
-  if (ankiDecks) {
-    setDeck();
-  }
-  if (ankiModels) {
-    cardModel = await setCardModel();
-    savedAnkiCardModels = await eel.get_anki_card_models()();
-    if (savedAnkiCardModels) {
-      const existingModelIndex = savedAnkiCardModels.findIndex(obj=>obj['model'] === cardModel)
-      if (existingModelIndex !== -1) {
-        // update table to saved settings
-        fieldValueMap =  {...savedAnkiCardModels[existingModelIndex]}; // get obj value
-        delete fieldValueMap['model']; // remove model name from object
-        applyFieldAndValuesToTable(fieldValueMap);
-      } else if (cardModel) {
-        modelFieldsNeedLoad = true;
-      }
-    } 
-    // python backend will send the result to setAnkiFields()
-    eel.fetch_anki_fields_by_modals(ankiModels)();
-    return true
-  }
-  return true
-}
-
-eel.expose(setAnkiFields);
-function setAnkiFields(modelName, fieldNames) {
-  ankiModelFieldMap[modelName] = fieldNames;
-  if (modelFieldsNeedLoad && modelName === cardModel) {
-    updateFieldValuesTable(ankiModelFieldMap[cardModel]);
-    modelFieldsNeedLoad = false;
-  }
-}
-
-async function reloadAnki() {
-  const fieldValuesTable = document.getElementById('field_values_table');
-  fieldValuesTable.hidden = true;
-  const result = await loadAnki();
-  fieldValuesTable.hidden = false;
-}
-
-eel.expose(getFieldValueMap)
-function getFieldValueMap() {
-  return fieldValueMap;
 }
 
 /**

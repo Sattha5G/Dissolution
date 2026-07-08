@@ -1,19 +1,19 @@
 # Documentation
 
 ##### Table of Contents  
-[Switch browser for Game2Text](#browser) <br/>
+[Switch browser for Dissolution](#browser) <br/>
 [Extract text with OCR](#ocr) <br/> 
 [Lookup word with Yomichan or Rikaichan](#yomichan) <br/>
 [Improve OCR by switching OCR Engine](#engine) <br/>
 [Improve OCR with image filters](#filters) <br/>
 [Improve OCR with Game Script Matching](#matching) <br/>
-[Create game flashcards in Anki](#anki) <br/>
+[Preview word info and audio for a log entry](#carddetails) <br/>
 [Hotkeys](#hotkeys) <br/>
 [Themes](#themes)
 
 <a name="browser"/>
 
-## Switch browser for Game2Text
+## Switch browser for Dissolution
 
 Change browser in the *config.ini* file. 
 - *default*: finds your default browser (on Windows)
@@ -25,7 +25,7 @@ Change browser in the *config.ini* file.
 
 ## Extract text with OCR
 
-Select your game or application window in Game2Text.
+Select your game or application window in Dissolution.
 
 <img src="https://user-images.githubusercontent.com/13146030/116772339-ecc80780-aa80-11eb-80ed-3ef66513cfb0.png" width="300">
 
@@ -37,7 +37,7 @@ Then, click and drag over the game screen to create a selection over a text regi
 
 ## Lookup word with Yomichan or Rikaichan
 
-Browser dictionaries like Yomichan are immedaitely accessible from Game2Text.
+Browser dictionaries like Yomichan are immedaitely accessible from Dissolution.
 
 To use Yomichan, hover over words and hold shift to bring up the dictionary.
 
@@ -61,7 +61,7 @@ OCR Space EU | Computer Vision Read API | Azure Cloud | R-CNN | Proprietary (Mic
 
 ## Improve OCR with Image Filters
 
-OCR works better when the text is on a clean background. This is done in Game2Text by applying image filters. 
+OCR works better when the text is on a clean background. This is done in Dissolution by applying image filters. 
 
 Right click on the game screen to show the image filters window.
 
@@ -77,60 +77,41 @@ You can also import and export image filters as profiles.
 
 Game script matching is a powerful tool to find the correct sentence in a game. 
 
-To start, install a game script file in the **logs window** in Game2Text or move it to the *game2text/gamescripts* folder.
+To start, install a game script file in the **logs window** in Dissolution or move it to the *gamescripts* folder.
 
-You can find [game scripts provided by our community](https://github.com/mathewthe2/Game2Text-GameScripts) or create your own by writing each in-game dialog to a newline in a text file.
+You can create your own game script by writing each in-game dialog to a newline in a text file.
 
 In the **log window**, select the game script at the top of the window. 
 
-When Game2Text finds matches, each extracted sentence log will get a dropdown icon at its right.
+When Dissolution finds matches, each extracted sentence log will get a dropdown icon at its right.
 
 Click on the dropdown button and select a game text. It will replace the extracted sentence.
 
 <img src="https://user-images.githubusercontent.com/13146030/116773540-5a2b6680-aa88-11eb-9b6b-258ec2ca39cc.png" width="400">
 
-<a name="anki"/>
+<a name="carddetails"/>
 
-## Create game flashcards in Anki
+## Preview word info and audio for a log entry
 
-Game2Text can create SRS flashcards in Anki with useful media such as game audio, screenshots, sentences, and dictionary definitions.
+In Dissolution, launch the *log window* to the right.
 
-To start, add [Anki Connect](https://ankiweb.net/shared/info/2055492159) to Anki.
+Each extracted sentence will be shown as a list.
 
-In Game2Text, launch the *Settings* Dialog and navigate to the *Anki* tab. 
-
-Select your deck and card model and fill in the fields.
-
-Name | Description |
---- | --- |
-sentence | text extracted from the game |
-selected word | words you highlighted |
-reading | reading of the selected word if it's a dictionary entry |
-glossary | definition of the selected word if it's a dictionary entry |
-audio | recorded audio of the game |
-screenshot | screenshot of the game when the text was extracted |
-
-Anki settings are automatically saved in Game2Text.
-
-In Game2Text, launch the *log window* to the right.
-
-Each extracted sentence will be shown as a list. 
-
-On the far right of each extracted sentence you can hover on the card icon to preview the information to add.
+On the far right of each extracted sentence you can hover on the card icon to preview a screenshot, the sentence, and dictionary info for a highlighted word.
 
 ### Selected Word
 
-When you highlight words in the log sentence or on the card, you add the *selected sentence* in Anki.
+When you highlight words in the log sentence or on the card, the word is looked up in the dictionary.
 
-The words will be parsed and if it's a valid dictionary entry, its *reading* in hiragana and its *glossary* definition will be added.
+If it's a valid dictionary entry, its *reading* in hiragana and its *glossary* definition will be shown on the card.
 
 ### Audio
 
 On Windows, system sound is recorded through Windows WASAPI.
 
-[Mac users, follow the instructions here](https://github.com/mathewthe2/Game2Text/blob/main/public/faq.md#sound) to set up a virtual audio cable. You may also need to install ffmpeg. You can install it through [brew](https://brew.sh/index_ja) by `brew install ffmpeg`.
+[Mac users, follow the instructions here](faq.md) to set up a virtual audio cable. You may also need to install ffmpeg. You can install it through [brew](https://brew.sh/index_ja) by `brew install ffmpeg`.
 
-7 seconds of audio prior to the text extracted are recorded for the *audio* field. You can disable this feature in the *Settings* Dialog.
+7 seconds of audio prior to the text extracted are recorded automatically. You can disable this feature in the *Settings* Dialog.
 
 Alternatively, you can also manually record your own audio by clicking on the microphone icon to the left the extracted sentence. Click once to start recording and click again to stop. 
 
@@ -138,7 +119,7 @@ If you're not happy with the result, you can press on the menu icon on the left 
 
 <a name="edit"/>
 
-### Edit cards before adding to Anki
+### Edit extracted text
 
 Sometimes there are unwanted characters in our extracted text. 
 
@@ -161,13 +142,12 @@ You can change hotkeys in the *config.ini* file
 Action | Windows | Mac OSX | Linux | 
 --- | --- | --- | --- |
 Refresh OCR | Ctrl-Q | Cmd-B | Ctrl-Q |
-Add to Anki | Shift-E | Shift-E| Shift-E |
 
 <a name="themes"/>
 
 ## Themes
 
-Since Game2Text runs on your browser, it is easy to customize it.
+Since Dissolution runs on your browser, it is easy to customize it.
 
 ### Dark Theme
 
@@ -183,4 +163,4 @@ Open a new tab in Chrome and click **Customize** on the bottom right.
 
 ![image](https://user-images.githubusercontent.com/13146030/117010335-48afbc00-ad1f-11eb-9f87-6adf14d22373.png)
 
-To match the toolbar color in Game2Text, set the custom color code to **#2E2E2E**.
+To match the toolbar color in Dissolution, set the custom color code to **#2E2E2E**.

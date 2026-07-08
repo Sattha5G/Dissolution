@@ -193,10 +193,6 @@ select {
     font-size: 22px;
 }
 
-.addToAnkiButton:hover {
-    filter: brightness(150%);
-}
-
 .tippy-box[data-theme~='material-light'] {
     color: black;
     background-color: var(--dialogBg);

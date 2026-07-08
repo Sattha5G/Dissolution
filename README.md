@@ -1,8 +1,6 @@
-# Game2Text
+# Dissolution
 
-![image](https://user-images.githubusercontent.com/13146030/117099796-b3efa180-ada4-11eb-8c68-431dfa0acdb5.png)
-
-[Game2Text](https://www.game2text.com) is an all-in-one application that helps you learn languages from the games you play.
+Dissolution is an all-in-one application that helps you learn languages from the games you play.
 
 ## Platforms
 - Windows 10
@@ -10,30 +8,21 @@
 
 ## Text Extraction Modes
 - Classic OCR with Tesseract, Tesseract Legacy, or OCR Space.
-- OCR-assisted game script matching. You can find game scripts in [this repository](https://github.com/mathewthe2/Game2Text-GameScripts). 
+- OCR-assisted game script matching using scripts placed in the *gamescripts* folder.
 - Text hooking for Visual Novels
-- Clipboard to Game2Text
+- Clipboard to Dissolution
 
 ## Features
 - Dictionary lookup with browser dictionaries like Yomichan and Rikaichan
-- Translation tools including DeepL, Papago, and Google Translate.
-- Create game flashcards with screenshot and game audio via Anki and AnkiConnect
-
-## Download 
-[Download Game2Text](https://game2text.com/download/) 
-
-## User Guide
-[Read User Guide](https://game2text.com/user-guide/quick-start/)
-
-## FAQ
-[Read FAQ](https://game2text.com/faq/switch-browser/)
+- Translation tools including DeepL and Google Translate.
 
 ## Development
 
-Create a venv and activate it.
+Install Python 3.11 (recommended via [pyenv](https://github.com/pyenv/pyenv)), create a venv, and activate it.
 
 ```bash
-virtualenv venv --python=python3.7.4
+pyenv install 3.11.9
+~/.pyenv/versions/3.11.9/bin/python3.11 -m venv venv
 source venv/bin/activate
 ```
 
@@ -41,8 +30,19 @@ Install requirements:
 
 ```bash
 pip install -r requirements.txt
-python game2text.py
+python dissolution.py
 ```
+
+## Extra Packages for macOS Development
+
+`tkinter` (used for file pickers) requires Tcl/Tk 8.6. Homebrew's default `tcl-tk` formula is 9.0, which Python 3.11 cannot build against, so install the 8.x formula **before** installing Python with pyenv:
+
+```bash
+brew install tcl-tk@8
+pyenv install 3.11.9
+```
+
+`python-build` automatically prefers `tcl-tk@8` over `tcl-tk` when both are present. If Python was already installed before `tcl-tk@8`, reinstall it: `pyenv uninstall 3.11.9 && pyenv install 3.11.9`.
 
 ## Extra Packages for Windows Development
 
@@ -60,7 +60,15 @@ python -m unittest
 
 ## Distribution
 
-Unzip *resources/sudachidict_small.zip* into the same directory.
+### GitHub Actions (recommended for Mac builds)
+
+The macOS app is built in CI instead of locally, via [.github/workflows/build-macos.yml](.github/workflows/build-macos.yml):
+
+- Go to the repo's **Actions** tab → **Build macOS App** → **Run workflow**, or push a tag matching `v*` (e.g. `v1.2.0`).
+- The workflow runs on an Intel (`macos-15-intel`) runner, since the bundled binaries in `resources/bin/mac` are x86_64.
+- Once the run finishes, download the built app from the **Artifacts** section of the run (`dissolution-macos.zip`).
+
+### Local build
 
 Windows: 
 
@@ -70,7 +78,7 @@ Mac:
 
 ```sh build.sh```
 
-Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Game2Text executable inside the package
+Temporary fix for all read/write operations using *os.path* on Mac builds with pyinstaller: create a wrapper file that runs the Dissolution executable inside the package
 
 ## Acknowledgement
 
@@ -80,7 +88,6 @@ Temporary fix for all read/write operations using *os.path* on Mac builds with p
 | :---------------------------------------------------------: | :------------------------------: | :-----: |
 |       [Python Eel](https://github.com/ChrisKnott/Eel)       | Electron-like Library for Python | 0.14.0  |
 |   [Tesseract](https://github.com/tesseract-ocr/tesseract)   |             OCR Tool             |  4.1.1  |
-|   [AnkiConnect](https://github.com/FooSoft/anki-connect)    |    Anki Remote API Extension     |    /    |
 | [SudachiPy](https://github.com/WorksApplications/SudachiPy) | Japanese Morphological Analyzer  |  0.5.2  |
 |    [Textractor](https://github.com/Artikash/Textractor)     |            Texthooker            | 4.16.1  |
 |              [FFmpeg](https://www.ffmpeg.org/)              |         Audio Converter          |   4.4   |

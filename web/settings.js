@@ -1,5 +1,5 @@
 const APPEARANCE_CONFIG = 'APPEARANCE';
-const ANKI_CONFIG = 'ANKICONFIG';
+const DICTIONARY_CONFIG = 'DICTIONARYCONFIG';
 const OCR_CONFIG = 'OCRCONFIG';
 const TRANSLATION_CONFIG = 'TRANSLATIONCONFIG';
 const LOG_CONFIG = 'LOGCONFIG';
@@ -32,10 +32,7 @@ const targetLanguageInput = document.getElementById('target_language_input');
 // Picture Control Elements
 const imageTypeInput = document.getElementById('image_type_input');
 
-// Anki Control Elements
-const ankiTagsInput = document.getElementById('anki_tags_input');
-const deckSelect = document.getElementById('deckSelect');
-const cardModelSelect = document.getElementById('cardModelSelect');
+// Dictionary Control Elements
 const dictionarySelect = document.getElementById('dictionarySelect');
 const screenshotMaxWidthInput = document.getElementById('screenshotMaxWidthInput');
 const screenshotMaxHeightInput = document.getElementById('screenshotMaxHeightInput');
@@ -48,7 +45,6 @@ const removeRepeatSelect = document.getElementById('removeRepeatSelect');
 
 // Hotkeys
 const refreshHotkeyInput = document.getElementById('refreshHotkeyInput');
-const addToAnkiHotkeyInput = document.getElementById('addToAnkiHotkeyInput');
 
 initConfig();
 
@@ -78,10 +74,9 @@ function initConfig() {
             initSetImageResize({ isResizeScreenshot: logConfig['resize_screenshot'], screenshotMaxWidth: logConfig['resize_screenshot_max_width'], screenshotMaxHeight: logConfig['resize_screenshot_max_height'] });
             logImageQuality = logConfig['logimagequality'];
             logSessionMaxLogSize = logConfig['lastsessionmaxlogsize'];
-            // Anki
-            const ankiConfig = config[ANKI_CONFIG];
-            initSetAnkiTags(ankiConfig['cardtags']);
-            initSetAnkiDictionaries(ankiConfig['anki_dictionary']);
+            // Dictionary
+            const dictionaryConfig = config[DICTIONARY_CONFIG];
+            initSetDictionaries(dictionaryConfig['default_dictionary']);
             // Texthooker
             const texthookerConfig = config[TEXTHOOKER_CONFIG];
             // initSetRemoveRepeatedSentencesSwitch(texthookerConfig['remove_repeat_mode']);
@@ -93,7 +88,6 @@ function initConfig() {
             const hotkeyConfig = config[HOTKEY_CONFIG];
             initHotkeys({
                 refreshHotkey: hotkeyConfig['refresh_ocr'],
-                addToAnkiHotkey: hotkeyConfig['add_to_anki'],
             });
         }
     })()
@@ -349,89 +343,10 @@ function openFolder(relative_path) {
 
 /*
  *
- Anki Settings 
+ Dictionary Settings
  *
 */
-function initSetAnkiTags(tags) {
-    ankitags = tags;
-    ankiTagsInput.parentElement.MaterialTextfield.change(tags);
-}
-async function setDeck() {
-    const defaultDeck = await eel.read_config(ANKI_CONFIG, 'deck')();
-    const deckOptions = deckSelector.querySelectorAll("option");
-    const selectedOption = Array.from(deckOptions).find(child => child.value === defaultDeck);
-    if (selectedOption) {
-        deck = defaultDeck;
-        deckSelect.value = defaultDeck;
-    }
-}
-async function setCardModel() {
-    const defaultCardModel = await eel.read_config(ANKI_CONFIG, 'model')();
-    const cardModelOptions = cardModelSelector.querySelectorAll("option");
-    const selectedOption = Array.from(cardModelOptions).find(child => child.value === defaultCardModel);
-    if (selectedOption) {
-        selectedOption.setAttribute('data-selected', true);
-        cardModelSelect.value = defaultCardModel;
-        return defaultCardModel
-    }
-    return ''
-}
-function changeDeck() {
-    selectedDeck = deckSelect.value;
-    eel.update_config(ANKI_CONFIG, { 'deck': selectedDeck })();
-}
-function changeCardModel() {
-    if (ankiModelFieldMap[cardModelSelect.value]) {
-        selectedModel = cardModelSelect.value;
-        updateFieldValuesTable(ankiModelFieldMap[selectedModel]);
-        if (savedAnkiCardModels) {
-            const existingModelIndex = savedAnkiCardModels.findIndex(obj => obj['model'] === selectedModel);
-            if (existingModelIndex !== -1) {
-                // update table to saved settings
-                fieldValueMap = { ...savedAnkiCardModels[existingModelIndex] } // get obj
-                delete fieldValueMap['model']; //remove model name from object
-                applyFieldAndValuesToTable(fieldValueMap);
-            }
-        }
-        eel.update_config(ANKI_CONFIG, { 'model': selectedModel })();
-    } else {
-        updateFieldValuesTable({})
-    }
-}
-function changeAnkiTags() {
-    const tagList = ankiTagsInput.value.split(/[ ,]+/);
-    let tags = '';
-    if (tagList) {
-        tags = tagList.join(' ');
-        ankiTagsInput.value = tags;
-    }
-    eel.update_config(ANKI_CONFIG, { 'cardtags': tags })();
-}
-async function updateFieldValue() {
-    const defaultAnkiModels = await eel.get_anki_card_models()();
-    savedAnkiCardModels = defaultAnkiModels ? defaultAnkiModels : [];
-    const modelName = cardModelSelect.value;
-    const fields = ankiModelFieldMap[modelName];
-    const table = document.getElementById('field_values_table');
-    const selectElementList = table.getElementsByClassName('field_value_select');
-    const values = [].map.call(selectElementList, selectElement => selectElement.value);
-    fieldValueMap = {};
-    fields.forEach((field, index) => fieldValueMap[field] = values[1 + index]);
-    if (savedAnkiCardModels.length === 0) {
-        savedAnkiCardModels.push({ model: modelName, ...fieldValueMap });
-    } else {
-        // if exists update else insert
-        const existingModelIndex = savedAnkiCardModels.findIndex(obj => obj['model'] === modelName);
-        if (existingModelIndex !== -1) {
-            savedAnkiCardModels[existingModelIndex] = { model: modelName, ...fieldValueMap };
-        } else {
-            savedAnkiCardModels.push({ model: modelName, ...fieldValueMap });
-        }
-    }
-    eel.update_anki_card_models(savedAnkiCardModels)();
-}
-
-async function initSetAnkiDictionaries(defaultDictionary) {
+async function initSetDictionaries(defaultDictionary) {
     const dictionaries = await eel.get_dictionaries()();
     dictionaries.forEach(dictionary => {
         const dictionaryOption = document.createElement('option');
@@ -447,7 +362,7 @@ async function initSetAnkiDictionaries(defaultDictionary) {
 async function selectDictionary() {
     if (dictionarySelect.value) {
         eel.set_dictionary(dictionarySelect.value)();
-        eel.update_config(ANKI_CONFIG, { 'anki_dictionary': dictionarySelect.value });
+        eel.update_config(DICTIONARY_CONFIG, { 'default_dictionary': dictionarySelect.value });
     }
 }
 
@@ -518,15 +433,10 @@ async function changeTextractorExecutablePath() {
  * 
  * Hotkeys
  */
-function initHotkeys({ refreshHotkey, addToAnkiHotkey }) {
+function initHotkeys({ refreshHotkey }) {
     refreshHotkeyInput.value = refreshHotkey;
-    addToAnkiHotkeyInput.value = addToAnkiHotkey;
 }
 
 function changeRefreshHotkey(input) {
     eel.update_config(HOTKEY_CONFIG, { 'refresh_ocr': input.value })();
-}
-
-function changeAddToAnkiHotkey(input) {
-    eel.update_config(HOTKEY_CONFIG, { 'add_to_anki': input.value })();
 }

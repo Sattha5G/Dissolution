@@ -2,7 +2,7 @@
 [Mac OS: Why is my application not showing in screen share?](#screen) <br/>
 [Mac OS: How do I record sound?](#q-how-do-i-record-system-sound-on-mac-os) <br/>
 [Windows: How do I record sound?](#q-how-do-i-record-system-sound-on-windows) <br/>
-[How do I use Game2Text without Chrome?](#browser) <br/>
+[How do I use Dissolution without Chrome?](#browser) <br/>
 [How do I perform OCR without leaving my game?](#hotkey)
 
 <a name="screen"/>
@@ -35,13 +35,13 @@ On the Output tab, select **Multi-Output Device** and on the Input tab select **
 
 <img width="580" alt="Screenshot 2021-05-01 at 9 52 15 PM" src="https://user-images.githubusercontent.com/13146030/116784568-87e3d000-aac7-11eb-880f-95900e259e6f.png">
 
-In Game2Text, click on the cogwheel icon to launch the **Settings Dialog**.
+In Dissolution, click on the cogwheel icon to launch the **Settings Dialog**.
 
 Click on Audio Device and select Blackhole 16ch.
 
 <img width="580" alt="Screenshot 2021-05-01 at 9 50 10 PM" src="https://user-images.githubusercontent.com/13146030/116784528-405d4400-aac7-11eb-86a3-69d89e98e330.png">
 
-On Mac OS, automatic recording is disabled when you launch Game2Text but can be re-enabled afterwards.
+On Mac OS, automatic recording is disabled when you launch Dissolution but can be re-enabled afterwards.
 
 Q. How do I record system sound on Windows?
 -
@@ -55,13 +55,13 @@ Set the VAC as the **recording device** and click **Properties**. Select the **L
 
 <img height="600" alt="vac_settings" src="https://user-images.githubusercontent.com/13146030/116955699-da8adb00-acc5-11eb-86db-733e97efebe0.png">
 
-Back in Game2Text, click **Settings** and select the **Media** tab. Select the VAC as your audio device.
+Back in Dissolution, click **Settings** and select the **Media** tab. Select the VAC as your audio device.
 
 <img width="590" alt="sound_settings" src="https://user-images.githubusercontent.com/13146030/116955941-8502fe00-acc6-11eb-906a-8ac593e1f7ab.png">
 
 <a name="browser"/>
 
-Q. How do I use Game2Text without Chrome?
+Q. How do I use Dissolution without Chrome?
 -
 Replace the browser value in *browser=[your browser]* in the *config.ini* file. 
 - *chrome*: Chrome

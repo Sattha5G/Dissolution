@@ -11,7 +11,6 @@ from tools import path_to_textractor, open_folder_textractor_path
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
 from logger import get_time_string, log_text, log_media, update_log_text
-from ankiconnect import invoke, get_anki_models, update_anki_models, create_anki_note, fetch_anki_fields
 from imageprofile import export_image_profile, load_image_profiles, open_image_profile
 from gamescript import load_game_scripts, open_game_script
 from dictionary import load_all_dictionaries, look_up, get_local_dictionaries, load_dictionary, get_jpod_audio_url
@@ -96,27 +95,6 @@ def read_config_all():
 @eel.expose
 def update_config(section, d):
     return w_config(section, d)
-
-@eel.expose
-def invoke_anki(action, params={}):
-    return invoke(action, params)
-
-@eel.expose
-def get_anki_card_models():
-    return get_anki_models()
-
-@eel.expose
-def fetch_anki_fields_by_modals(model_names):
-    fetch_anki_fields_thread = threading.Thread(target=fetch_anki_fields, args=((model_names,)))
-    fetch_anki_fields_thread.start()
-
-@eel.expose
-def update_anki_card_models(ankiModels):
-    return update_anki_models(ankiModels)
-
-@eel.expose
-def create_note(note_data):
-    return create_anki_note(note_data)
 
 @eel.expose
 def set_dictionary(dictionary):

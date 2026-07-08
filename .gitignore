@@ -23,7 +23,7 @@ node_modules/
 dist/
 
 # pyinstaller spec file
-game2text.spec
+dissolution.spec
 
 # Compiled Java class files
 *.class

@@ -1,5 +1,3 @@
-const ANKI_CONFIG = 'ANKICONFIG';
-
 let currentLogs = [];
 window.tippyInstances = [];
 let activeCardLogId = '';
@@ -270,10 +268,6 @@ function formatCard(logId, cardElement) {
   }
   const cardBodyList = cardElement.getElementsByClassName('addCardBodyList')[0];
   cardBodyList.setAttribute("log_id", logId);
-
-  const addCardToAnkiButton = cardElement.getElementsByClassName('addCardToAnkiButton')[0];
-  addCardToAnkiButton.id = `add_card_to_anki_button_${logId}`
-  addCardToAnkiButton.setAttribute("log_id", logId);
 
   if (log.selectedText) {
     let selectedTextPreview = log.selectedText;
@@ -673,8 +667,8 @@ function showCardWithSelectedText(selectedText) {
 }
 
 /**
- * Add selected word when user highlights words in log or addToAnkiCard
- * 
+ * Add selected word when user highlights words in log or the word info card
+ *
  */
 document.addEventListener('mouseup', event => {
   if (window.getSelection) {
@@ -782,52 +776,6 @@ function refreshCardContent(logId) {
   }
 }
 
-
-eel.expose(addActiveCardToAnki)
-function addActiveCardToAnki() {
-  if (window.tippyInstances.length > 0) {
-    const activeTippy = window.tippyInstances[window.tippyInstances.length - 1];
-    const logId = activeTippy.reference.id.split('show_anki_form_button_')[1];
-    addCardToAnki(logId);
-  }
-}
-
-async function addCardToAnki(logId) {
-  const log = getLogById(logId);
-  const noteData = {
-    folder: log.folder,
-    filename: log.id,
-    sentence: log.text
-  }
-  if (log.selectedText) {
-    noteData['selectedtext'] = log.selectedText;
-  }
-  if (log.dictionary) {
-    noteData['selectedtext'] = log.dictionary[0].headword
-    noteData['glossary'] = log.dictionary[0].glossary_list.join(', ');
-    if (log.dictionary[0].reading) {
-      noteData['reading'] = log.dictionary[0].reading;
-    }
-    if (log.dictionary[0].audio) {
-      noteData['wordaudio'] = log.dictionary[0].audio;
-    }
-  }
-  if (log.audio) {
-    noteData['audio'] = log.audio;
-  }
-  if (log.image) {
-    noteData['screenshot'] = log.image;
-    noteData['imagetype'] = log.image_type;
-  }
-  const result = await eel.create_note(noteData)();
-  if (result) {
-    if (typeof result === 'string' && result.includes('Error')) {
-      notify(result);
-    } else {
-      notify('Added to Anki');
-    }
-  }
-}
 
 function notify(message) {
   const notification = document.querySelector('.mdl-js-snackbar');

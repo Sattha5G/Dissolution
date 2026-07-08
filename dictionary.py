@@ -6,7 +6,7 @@ import base64
 # from sudachipy import dictionary
 from tools import bundle_dir
 from pathlib import Path
-from config import r_config, ANKI_CONFIG
+from config import r_config, DICTIONARY_CONFIG
 import glob
 
 dictionary_map = {}
@@ -42,7 +42,7 @@ def load_dictionary_by_path(dictionary_path):
     return output_map
 
 def load_all_dictionaries():
-    default_dictionary = r_config(ANKI_CONFIG, 'anki_dictionary')
+    default_dictionary = r_config(DICTIONARY_CONFIG, 'default_dictionary')
     load_dictionary(default_dictionary)
     # pitch_dictionary_map = load_sdictionary(str(Path(bundle_dir, 'dictionaries', 'kanjium_pitch_accents.zip')))
 
