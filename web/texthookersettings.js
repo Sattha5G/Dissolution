@@ -73,12 +73,7 @@ function textractorPipe(textractorOutput) {
         if (textractorOutputObject.name === 'Console') {
             textractorLogLabel.innerText = textractorOutputObject.text
             if (textractorOutputObject.text.includes('pipe connected')) {
-                const notification = document.querySelector('.mdl-js-snackbar');
-                notification.MaterialSnackbar.showSnackbar(
-                {
-                    message: textractorOutputObject.text
-                }
-                );
+                showToast(textractorOutputObject.text);
             }
         }
         if (currentHook == hook) {

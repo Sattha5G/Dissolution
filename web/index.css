@@ -1,41 +1,13 @@
-:root {
-  --white: #f8f8f8;
-  --black: #0d0d0f;
-  --gray: #eee;
-  --brand-yellow: #F7E603;
-  --brand-blue: #013559;
-  --brand-blue-dark: #012740;
-  --brand-blue-darker: #011b2e;
-}
-.dark-theme {
-  --primary: var(--brand-yellow);
-  --accent: var(--brand-yellow);
-  --mainBg: var(--black);
-  --fontColor: var(--white);
-}
-* {
-  transition: background-color 0.3s ease, color 0.5s ease;
-}
-body {
-  background-color: var(--mainBg);
-  color: var(--fontColor) !important;
-}
 #startMessage {
   z-index: 30;
   transition: height 0.3s ease-out;
-  /* cursor: pointer; */
-  width: 600px;
   text-align: center;
-  line-height: 300px;
-  font-size: 60px;
   grid-column-start: 1;
   grid-column-end: 1;
   grid-row-start: 2;
   grid-row-end: 4;
 }
 .results {
-  background-color: var(--mainBg);
-  color: var(--fontColor) !important;
   max-height: 450px;
   overflow: auto;
   padding: 8px;
@@ -59,7 +31,7 @@ body {
   border-radius: 6px;
   padding: 6px 0;
   cursor: pointer;
-  
+
   /* Position the tooltip */
   position: fixed;
   z-index: 999;
@@ -121,18 +93,14 @@ dialog[open] {
   padding-left: 16px;
   padding-top: 10px;
   font-size: 16px;
-  color: var(--brand-blue);
+  color: var(--font-muted);
 }
 .tab_select_wrapper {
   padding-left: 16px;
 }
-.field_value_select {
-  min-width: 200px;
-}
 video, canvas {
   width: 100vw;
   transition: height 0.3s ease-out;
-  /* border: 1px solid #999; */
   grid-column-start: 1;
   grid-column-end: 1;
   grid-row-start: 2;
@@ -145,21 +113,14 @@ video, canvas {
 .tippy-content {
   padding: 0px;
 }
-.canvasContextMenu {
-  padding: 0px;
-  min-width: 280px;
-  background: rgba(28,28,28,0.9);
-}
 .canvasContextMenuItem {
   color: #eee;
   background: rgba(28,28,28,0.9);
   cursor: pointer;
+  padding: 8px 12px;
 }
 .canvasContextMenuItem:hover {
   background: rgba(255,255,255,0.1)
-}
-.canvasContextMenuItem > .mdl-list__item-primary-content > .mdl-list__item-icon {
-  color: white;
 }
 .canvasContextSelectionImage {
   height: 100%;
@@ -167,27 +128,12 @@ video, canvas {
   max-height:100%;
   display: block;
 }
-.welcome-card-wide.mdl-card {
-  width: 100vw;
-  background: white !important;
-}
-.welcome-card-wide > .mdl-card__title {
-  color: #fff;
-  height: 260px;
-  background: var(--brand-blue-darker, #011b2e) url("static/dissolution-banner.png") center / contain no-repeat;
-}
-.welcome-card-wide > .mdl-card__menu {
-  color: #fff;
-}
 .canvasContextMenu {
-/*   grid-template-areas:
-  'label select select select iconbutton'
-  'image image image image image'; */
-   padding: 10px;
-   grid-gap: 50px;
+  padding: 10px;
+  grid-gap: 50px;
 }
 .canvasContextMenu > .profileSelect {
-   min-width: 220px; 
+  min-width: 220px;
 }
 .canvasContextMenu > .profileSelectImport {
   padding: 0;
@@ -196,69 +142,26 @@ video, canvas {
   font-size: 16px;
   padding-right: 15px;
 }
-.canvasContextMenu > .mdl-slider {
+.canvasContextMenu > .slider {
   margin-top: 14px;
   margin-bottom: 14px;
 }
- .canvasContextMenu > .binarizeSliderLabel {
+.canvasContextMenu > .binarizeSliderLabel {
   font-size: 16px;
 }
-.canvasContextMenu > .blurSliderLabel { 
+.canvasContextMenu > .blurSliderLabel {
   font-size: 16px;
 }
 .checkBoxContainer {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding-bottom: 10px;
   padding-top: 10px;
-}
-.checkBoxContainer > .mdl-checkbox__label {
-  width: 30%;
-}
-.checkBoxContainer > .mdl-checkbox  {
-  width: 10%;
-  padding-top: 3px;
 }
 .canvasMenuActionsContainer {
   display: flex;
   justify-content: space-between;
   padding-bottom: 10px;
   padding-top: 10px;
-}
-.canvasMenuActionsContainer > mdl-button {
-  width: 30%;
-}
-.settingsIcon {
-  color: rgba(0, 0, 0, 0.54) !important;
-  background: white !important;
-}
-.settingsCard {
-  width: 100%; 
-  margin-top: 12px; 
-  padding-top: 0px; 
-  padding-bottom: 0px;
-  overflow: visible !important;
-  z-index: initial;
-  min-height: initial;
-}
-.settingsCard > .mdl-list {
-  padding-top: 0px; 
-  padding-left: 10px; 
-  padding-right: 10px; 
-  margin-top: 0px;
-}
-.settingsCard > .mdl-list > .mdl-list__item {
-  overflow: visible !important;
-}
-.mdl-tabs__panel > .mdl-list > .mdl-list__item {
-  overflow: visible !important;
-}
-.settingsCard > .mdl-list > .sectionTitle {
-  color: rgba(0, 0, 0, 0.8)
-}
-#hotkey_table {
-  width: 100%
-}
-#hotkey_table > tbody > tr > td > input {
-  width: 100%
 }

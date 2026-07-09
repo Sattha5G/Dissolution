@@ -269,7 +269,7 @@ function formatCard(logId, cardElement) {
       if (log.dictionary[0].audio) {
         // TODO: prevent rest of the text from moving when inserting audio icon
         selectedTextPreview += `
-        <button log_id=${log.id} onclick="playWordAudio(this)" class="logMenuButton mdl-button mdl-js-button mdl-button--icon">
+        <button log_id=${log.id} onclick="playWordAudio(this)" class="logMenuButton btn btn-icon">
           <i style="line-height: 20px !important;" class="material-icons">play_circle_filled</i>
         </button>`;
       }
@@ -304,10 +304,10 @@ function formatCard(logId, cardElement) {
 
 function createCardSectionElement(iconName, field, value, contentEditable = false, footerIcon = '') {
   const cardSection = document.createElement('li');
-  cardSection.classList.add('mdl-list__item');
+  cardSection.classList.add('list-item');
   const content = `
-    <span class="card_${field}_container mdl-list__item-primary-content">
-        <i class="material-icons mdl-list__item-icon">${iconName}</i>
+    <span class="card_${field}_container list-item-content">
+        <span class="list-item-icon material-icons">${iconName}</span>
         <span ${contentEditable && `oninput="changeLogText(this)"`} contentEditable=${contentEditable} class="card_${field}">${value}</span>
         ${footerIcon && `<i class="material-icons" style="padding-left:12px">${footerIcon}</i>`}
     </span>`;
@@ -343,16 +343,16 @@ function formatLogMenu(logId, logMenuContent) {
 
 function formatMatchScriptMenu(logId, matchScriptContent) {
   const log = getLogById(logId);
-  matchScriptContent.innerHTML = `<div class="matchingScriptMenuCard mdl-card mdl-shadow--2dp">
-    <ul class="mdl-list">
+  matchScriptContent.innerHTML = `<div class="matchingScriptMenuCard">
+    <ul class="list">
     ${(log.matches && log.originalText && log.originalText.trim() !== log.matches[0][0].trim()) ?
-      `<li class="mdl-list__item" log_id="${logId}" onclick="replaceLogText(this.getAttribute('log_id'), this.innerText)">
-        <span class="mdl-list__item-primary-content">${log.originalText}</span>
+      `<li class="list-item" log_id="${logId}" onclick="replaceLogText(this.getAttribute('log_id'), this.innerText)">
+        <span class="list-item-content">${log.originalText}</span>
       </li>` : ''}
       ${log.matches.map(match => {
         return (
-          `<li class="mdl-list__item" log_id="${logId}" onclick="replaceLogText(this.getAttribute('log_id'), this.innerText)">
-          <span class="mdl-list__item-primary-content">${match[0]}</span>
+          `<li class="list-item" log_id="${logId}" onclick="replaceLogText(this.getAttribute('log_id'), this.innerText)">
+          <span class="list-item-content">${match[0]}</span>
         </li>`
         )
       })}
@@ -765,10 +765,9 @@ function refreshCardContent(logId) {
 
 
 function notify(message) {
-  const notification = document.querySelector('.mdl-js-snackbar');
-  notification.MaterialSnackbar.showSnackbar(
-    {
-      message: message
-    }
-  );
+  const toast = document.getElementById('toast');
+  toast.querySelector('.toast-text').innerText = message;
+  toast.classList.add('is-visible');
+  clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(() => toast.classList.remove('is-visible'), 3000);
 }

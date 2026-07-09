@@ -1,3 +1,11 @@
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.querySelector('.toast-text').innerText = message;
+  toast.classList.add('is-visible');
+  clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(() => toast.classList.remove('is-visible'), 3000);
+}
+
 // Default Settings
 const autoModeSpeed = 500;
 let autoMode = false;
@@ -205,11 +213,11 @@ function toggleShowSelection() {
     ctx.strokeStyle = selectionColor;
     ctx.lineWidth = selectionLineWidth;
     ctx.stroke();
-    showSelectionButton.classList.add("mdl-button--colored");
+    showSelectionButton.classList.add("is-active");
     showSelectionTooltip.innerText = "Hide Selection";
   } else if (rect.width > 0) {
     ctx.clearRect(0,0,canvas.width,canvas.height); //clear canvas
-    showSelectionButton.classList.remove("mdl-button--colored");
+    showSelectionButton.classList.remove("is-active");
     showSelectionTooltip.innerText = "Show Selection";
   }
 }
@@ -223,12 +231,12 @@ function toggleTranslation() {
       } else {
         translatedOutput.classList.remove('hide');
       }
-      showTranslationButton.classList.add("mdl-button--colored");
+      showTranslationButton.classList.add("is-active");
       showTranslationTooltip.innerText = "Hide Translation";
     }
   } else {
     translatedOutput.classList.add('hide');
-    showTranslationButton.classList.remove("mdl-button--colored");
+    showTranslationButton.classList.remove("is-active");
     showTranslationTooltip.innerText = "Show Translation";
   }
 }
@@ -430,13 +438,35 @@ function toggleAutoMode() {
         showStuff(rect);
       }
     }, autoModeSpeed);
-    autoModeButton.classList.add("mdl-button--colored");
+    autoModeButton.classList.add("is-active");
   } else {
     refreshButton.disabled = false;
     clearInterval(autoModeTimer);
-    autoModeButton.classList.remove("mdl-button--colored");
+    autoModeButton.classList.remove("is-active");
   }
 }
+
+/*
+ *
+ Tabs (replaces MDL's mdl-js-tabs auto-wiring)
+ *
+*/
+function initTabs(scope) {
+  scope.querySelectorAll('.tab-bar').forEach(tabBar => {
+    const container = tabBar.parentElement;
+    tabBar.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', (event) => {
+        event.preventDefault();
+        const panelId = tab.getAttribute('href').slice(1);
+        tabBar.querySelectorAll('.tab').forEach(t => t.classList.remove('is-active'));
+        container.querySelectorAll(':scope > .tab-panel').forEach(p => p.classList.remove('is-active'));
+        tab.classList.add('is-active');
+        document.getElementById(panelId).classList.add('is-active');
+      });
+    });
+  });
+}
+initTabs(document);
 
 function openSettings() {
   settingsDialog.hidden = false;
@@ -826,10 +856,10 @@ function sendTextIfSelected() {
 */
 
 function toggleCropVideo() {
-  const isCropEnabled = cropVideoButton.classList.contains("mdl-button--colored");
+  const isCropEnabled = cropVideoButton.classList.contains("is-active");
   if (selectionMode ==='ocr' && isCropEnabled) {
     // Stop playing cropped selection
-    cropVideoButton.classList.remove("mdl-button--colored");
+    cropVideoButton.classList.remove("is-active");
     cropVideoTooltip.innerText = "Crop Video";
     clearInterval(croppedVideoTimer);
     croppedVideoCtx.clearRect(0,0,croppedVideoCanvas.width,croppedVideoCanvas.height);
@@ -840,13 +870,13 @@ function toggleCropVideo() {
     // Start crop selection
     selectionMode = 'crop';
     selectionColor = 'blue';
-    cropVideoButton.classList.add("mdl-button--colored");
+    cropVideoButton.classList.add("is-active");
     cropVideoTooltip.innerText = "Cancel Crop";
   } else if (selectionMode === 'crop' && isCropEnabled) {
     // Cancel before crop selection
     selectionMode = 'ocr';
     selectionColor = 'red';
-    cropVideoButton.classList.remove("mdl-button--colored");
+    cropVideoButton.classList.remove("is-active");
     cropVideoTooltip.innerText = "Cancel Crop";
   }
 }

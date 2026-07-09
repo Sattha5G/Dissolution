@@ -20,13 +20,11 @@ const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
 
 // OCR Control Elements
 const OCREngineSelect = document.getElementById("ocr_engine_select");
-const OCREngineSelectContainer = document.getElementById("ocr_engine_select_container");
-const OCRLanguageSelectContainer = document.getElementById("ocr_language_select_container");
+const OCRLanguageSelect = document.getElementById("ocr_language_select");
 const textOrientationSwitch = document.getElementById("text-orientation-switch");
 
 // Translation Control Elements
 const translationSelect = document.getElementById("translation_select");
-const translationSelectContainer = document.getElementById("translation_select_container");
 const sourceLanguageInput = document.getElementById('source_language_input');
 const targetLanguageInput = document.getElementById('target_language_input');
 
@@ -104,48 +102,37 @@ function initConfig() {
 function initFontSize(fontSize) {
     updateFontSize(fontSize);
     const fontSizeSlider = document.getElementById("font-size-slider");
-    fontSizeSlider.MaterialSlider.change(fontSize);
+    fontSizeSlider.value = fontSize;
 }
 
 function initOCREngine(engine) {
     if (engine) {
         OCREngine = engine;
-        const engineOptions = OCREngineSelectContainer.querySelectorAll("li");
-        const selectedOption = Array.from(engineOptions).find(child => child.innerHTML === engine);
-        if (selectedOption) {
-            selectedOption.setAttribute('data-selected', true);
-        } else {
-            // Fallback to default Tesseract if option not found
-            const defaultOption = Array.from(engineOptions).find(child => child.innerText == "Tesseract Default")
-            defaultOption.setAttribute('data-selected', true);
-        }
-        getmdlSelect.init('#ocr_engine_select_container');
+        const validOption = Array.from(OCREngineSelect.options).find(option => option.value === engine);
+        OCREngineSelect.value = validOption ? engine : "Tesseract Default";
     }
 }
 
 async function initOCRLanguage(currentLanguage) {
     try {
         const languages = await eel.get_ocr_languages()();
-        const optionList = OCRLanguageSelectContainer.querySelector("ul");
-        optionList.innerHTML = '';
+        OCRLanguageSelect.innerHTML = '';
         languages.forEach(language => {
-            const option = document.createElement('li');
-            option.classList.add('mdl-menu__item');
-            option.setAttribute('data-val', language.code);
+            const option = document.createElement('option');
+            option.value = language.code;
             option.innerText = language.name;
             if (language.code === currentLanguage) {
-                option.setAttribute('data-selected', true);
+                option.selected = true;
             }
-            optionList.append(option);
+            OCRLanguageSelect.append(option);
         });
-        getmdlSelect.init('#ocr_language_select_container');
     } catch (error) {
         console.error('Failed to load OCR languages', error);
     }
 }
 
 function updateOCRLanguageAndPersist() {
-    const selectedCode = OCRLanguageSelectContainer.querySelector('input[type="hidden"]').value;
+    const selectedCode = OCRLanguageSelect.value;
     if (selectedCode && currentConfig[OCR_CONFIG]['tesseract_language'] !== selectedCode) {
         currentConfig[OCR_CONFIG]['tesseract_language'] = selectedCode;
         eel.update_config(OCR_CONFIG, { 'tesseract_language': selectedCode, 'ocr_space_language': selectedCode })();
@@ -162,16 +149,8 @@ function updateOCRLanguageAndPersist() {
 function initTranslation(service) {
     if (service) {
         translationService = service;
-        const translationOptions = translationSelectContainer.querySelectorAll("li");
-        const selectedOption = Array.from(translationOptions).find(child => child.innerText === service);
-        if (selectedOption) {
-            selectedOption.setAttribute('data-selected', true);
-        } else {
-            // Fallback to default DeepL if option not found
-            const defaultOption = Array.from(translationOptions).find(child => child.innerText == "DeepL Translate")
-            defaultOption.setAttribute('data-selected', true);
-        }
-        getmdlSelect.init('#translation_select_container');
+        const validOption = Array.from(translationSelect.options).find(option => option.value === service);
+        translationSelect.value = validOption ? service : "DeepL Translate";
     }
 }
 
@@ -259,10 +238,10 @@ function languageNameFromCode(code) {
 
 function initSetTranslationLanguages({ sourceLang, targetLang }) {
     sourceLanguage = sourceLang;
-    sourceLanguageInput.parentElement.MaterialTextfield.change(languageNameFromCode(sourceLang));
+    sourceLanguageInput.value = languageNameFromCode(sourceLang);
 
     targetLanguage = targetLang;
-    targetLanguageInput.parentElement.MaterialTextfield.change(languageNameFromCode(targetLang));
+    targetLanguageInput.value = languageNameFromCode(targetLang);
 }
 
 function updateTranslationServiceAndPersist() {
@@ -281,8 +260,7 @@ function changeSourceLanguage() {
         eel.update_config(TRANSLATION_CONFIG, { 'source_lang': code })();
     }
     // Normalize the display (or revert it if the input wasn't a known language)
-    sourceLanguageInput.parentElement.MaterialTextfield.change(
-        languageNameFromCode(translationConfig['source_lang']));
+    sourceLanguageInput.value = languageNameFromCode(translationConfig['source_lang']);
 }
 
 function changeTargetLanguage() {
@@ -293,8 +271,7 @@ function changeTargetLanguage() {
         translationConfig['target_lang'] = code;
         eel.update_config(TRANSLATION_CONFIG, { 'target_lang': code })();
     }
-    targetLanguageInput.parentElement.MaterialTextfield.change(
-        languageNameFromCode(translationConfig['target_lang']));
+    targetLanguageInput.value = languageNameFromCode(translationConfig['target_lang']);
 }
 
 /*
@@ -312,13 +289,13 @@ function initLaunchLogWindow(isLaunchLogWindow) {
 function initIsLogImages(isLogImages) {
     if (isLogImages === 'true') {
         toggleLogImages();
-        document.getElementById("log-images-switch").parentElement.MaterialSwitch.on();
+        document.getElementById("log-images-switch").checked = true;
     }
 }
 
 function initImageType(imageType) {
     logImageType = imageType;
-    imageTypeInput.parentElement.MaterialTextfield.change(imageType);
+    imageTypeInput.value = imageType;
 }
 
 function changeImageType() {
@@ -439,7 +416,7 @@ async function toggleResizeScreenshotSwitchAndPersist() {
 function initSetImageResize({ isResizeScreenshot, screenshotMaxWidth, screenshotMaxHeight }) {
     if (isResizeScreenshot === 'true') {
         toggleResizeScreenshotSwitch();
-        resizeScreenshotSwitch.parentElement.MaterialSwitch.on();
+        resizeScreenshotSwitch.checked = true;
     }
     resizeScreenshotMaxWidth = parseInt(screenshotMaxWidth, 10);
     resizeScreenshotMaxHeight = parseInt(screenshotMaxHeight, 10);
@@ -517,7 +494,7 @@ function toggleRemoveDuplicateCharactersAndPersist() {
 function initSetRemoveDuplicateCharactersSwitch(isRemoveDuplicateCharacters) {
     if (isRemoveDuplicateCharacters === 'true') {
         toggleRemoveDuplicateCharacters();
-        document.getElementById("removeDuplicateCharactersSwitch").parentElement.MaterialSwitch.on();
+        document.getElementById("removeDuplicateCharactersSwitch").checked = true;
     }
 }
 function toggleRemoveWhiteSpaces() {
@@ -530,7 +507,7 @@ async function toggleRemoveWhiteSpacesAndPersist() {
 function initSetRemoveWhiteSpacesSwitch(isRemoveWhiteSpaces) {
     if (isRemoveWhiteSpaces === 'true') {
         toggleRemoveWhiteSpaces();
-        document.getElementById("removeWhiteSpacesSwitch").parentElement.MaterialSwitch.on();
+        document.getElementById("removeWhiteSpacesSwitch").checked = true;
     }
 }
 

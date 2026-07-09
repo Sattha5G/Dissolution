@@ -2,47 +2,6 @@ html {
     scroll-behavior: smooth;
 }
 
-:root {
-    --white: #f8f8f8;
-    --black: #0d0d0f;
-    --dark: #16161a;
-    --light-gray: #BDBDBD;
-    --gray: #eee;
-    --brand-yellow: #F7E603;
-    --brand-blue: #013559;
-    --brand-blue-dark: #012740;
-    --brand-blue-darker: #011b2e;
-}
-
-.dark-theme {
-    --primary: var(--brand-yellow);
-    --mainBg: var(--black);
-    --secondaryBg: var(--brand-blue-darker);
-    --iconButton: var(--brand-yellow);
-    --header: var(--brand-blue);
-    --dialogBg: var(--dark);
-    --focus: var(--brand-blue-dark);
-    --disabled: #555;
-    --fontColor: var(--white);
-}
-
-* {
-    transition: background-color 0.3s ease, color 0.5s ease;
-}
-
-body {
-    background-color: var(--mainBg);
-}
-
-.mdl-list__item-primary-content {
-    color: var(--fontColor);
-}
-
-.mdl-card {
-    background-color: var(--dialogBg);
-    box-shadow: initial;
-}
-
 #loadingLogsScreen {
     margin: 0;
     position: absolute;
@@ -59,8 +18,6 @@ body {
 }
 
 #gameScriptLoader {
-    background: var(--header);
-    color: var(--white);
     min-height: 20px;
     padding: 12px;
     vertical-align: middle;
@@ -84,21 +41,17 @@ select {
 }
 
 .logItem:hover,
-.matchingScriptMenuCard>.mdl-list>.mdl-list__item:hover,
-.logMenuCard>.mdl-list>.mdl-list__item:hover {
-    background-color: var(--secondaryBg);
+.matchingScriptMenuCard>.list>.list-item:hover,
+.logMenuCard>.list>.list-item:hover {
+    background-color: var(--surface-2);
 }
 
-.mdl-button--colored {
-    color: var(--iconButton) !important;
+.matchingScriptMenuCard>.list>.list-item:hover,
+.logMenuCard>.list>.list-item:hover {
+    background-color: var(--hover);
 }
 
-.matchingScriptMenuCard>.mdl-list>.mdl-list__item:hover,
-.logMenuCard>.mdl-list>.mdl-list__item:hover {
-    background-color: var(--focus);
-}
-
-.mdl-list__item-primary-content>.logMenuButton {
+.list-item-content>.logMenuButton {
     visibility: hidden;
     opacity: 0;
 }
@@ -109,7 +62,7 @@ select {
     transition: all 0.2s ease-in 0.3s;
 }
 
-.matchingScriptMenuCard>.mdl-list>.mdl-list__item {
+.matchingScriptMenuCard>.list>.list-item {
     cursor: pointer;
     font-size: 16px;
     transition-duration: .28s;
@@ -119,11 +72,11 @@ select {
     animation: fadein 0.6s;
 }
 
-.logMenuCard>.mdl-list {
+.logMenuCard>.list {
     padding: 0
 }
 
-.logMenuCard>.mdl-list>.mdl-list__item {
+.logMenuCard>.list>.list-item {
     cursor: pointer;
     font-size: 16px;
     transition-duration: .28s;
@@ -138,7 +91,7 @@ select {
 }
 
 .game-script-arrow-down-icon {
-    color: var(--fontColor);
+    color: var(--font);
 }
 
 .logMenuCard {
@@ -150,12 +103,13 @@ select {
     pointer-events: none;
 }
 
-.disabled_list__item>.mdl-list__item-primary-content {
-    color: var(--disabled);
+.disabled_list__item>.list-item-content {
+    color: var(--font-muted);
+    opacity: 0.5;
 }
 
 .note-add-icon:hover {
-    color: var(--brand-yellow);
+    color: var(--yellow);
 }
 
 .playAudioButton {
@@ -164,6 +118,8 @@ select {
 
 .logSecondaryActionGroup {
     min-width: 70px;
+    display: flex;
+    align-items: center;
 }
 
 .addCardScreenshot {
@@ -175,28 +131,7 @@ select {
     font-size: 22px;
 }
 
-.tippy-box[data-theme~='material-light'] {
-    color: black;
-    background-color: var(--dialogBg);
-    box-shadow:
-        /* offset-x | offset-y | blur-radius | spread-radius | color */
-        0px 6px 10px 0px hsla(0, 0%, 0%, 0.14),
-        0px 1px 18px 0px hsla(0, 0%, 0%, 0.12),
-        0px 3px 5px -1px hsla(0, 0%, 0%, 0.2);
-}
-
-.tippy-box[data-theme~='material-light-long'] {
-    color: black;
-    background-color: var(--dialogBg);
-    box-shadow:
-        /* offset-x | offset-y | blur-radius | spread-radius | color */
-        0px 6px 10px 0px hsla(0, 0%, 0%, 0.14),
-        0px 1px 18px 0px hsla(0, 0%, 0%, 0.12),
-        0px 3px 5px -1px hsla(0, 0%, 0%, 0.2);
-    min-width: 85vw;
-}
-
-.demo-card-square.mdl-card {
+.demo-card-square {
     height: 400px;
 }
 
@@ -209,7 +144,7 @@ select {
     overflow-y: auto;
 }
 
-.addCardBodyContainer>.mdl-card__actions {
+.addCardBodyContainer > .dialog-actions {
     display: flex;
     box-sizing: border-box;
     align-items: center;
