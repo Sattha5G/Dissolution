@@ -57,6 +57,14 @@ Tesseract Legacy | Tesseract 3 | Local | CNN | Open Source |
 OCR Space NA | Computer Vision Read API | Azure Cloud | R-CNN | Proprietary (Microsoft) |
 OCR Space EU | Computer Vision Read API | Azure Cloud | R-CNN | Proprietary (Microsoft) |
 
+### OCR Language
+
+Select the language of the game text in **Settings → OCR Language**. Japanese and English are bundled; additional Tesseract `.traineddata` files placed in the tessdata folder appear in the dropdown automatically.
+
+### Translation Languages
+
+Pick the source and target languages in **Settings → Translation** — click the field and choose from the dropdown, or type to search (e.g. source `English`, target `Thai` to translate English games into Thai). Google Translate supports the most language pairs; DeepL supports fewer languages.
+
 <a name="filters"/>
 
 ## Improve OCR with Image Filters
@@ -149,9 +157,9 @@ Refresh OCR | Ctrl-Q | Cmd-B | Ctrl-Q |
 
 Since Dissolution runs on your browser, it is easy to customize it.
 
-### Dark Theme
+### Font Size
 
-You can toggle **dark theme** and font size in **Settings** > **Appearances**.
+You can adjust the font size in **Settings** > **Appearances**.
 
 ### Window Color
 
@@ -163,4 +171,4 @@ Open a new tab in Chrome and click **Customize** on the bottom right.
 
 ![image](https://user-images.githubusercontent.com/13146030/117010335-48afbc00-ad1f-11eb-9f87-6adf14d22373.png)
 
-To match the toolbar color in Dissolution, set the custom color code to **#2E2E2E**.
+To match the toolbar color in Dissolution, set the custom color code to **#013559**.

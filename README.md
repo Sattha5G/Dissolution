@@ -16,6 +16,12 @@ Dissolution is an all-in-one application that helps you learn languages from the
 - Dictionary lookup with browser dictionaries like Yomichan and Rikaichan
 - Translation tools including DeepL and Google Translate.
 
+## Language Support
+
+- **OCR**: Japanese and English trained data are bundled. Switch languages in **Settings → OCR Language**. To add more languages, drop extra Tesseract `.traineddata` files (e.g. `tha.traineddata` from [tessdata_best](https://github.com/tesseract-ocr/tessdata_best)) into the tessdata folder (`resources/bin/mac/tesseract/4.1.1/share/tessdata` on Mac, `resources/bin/win/tesseract/tessdata` on Windows) — they will appear in the dropdown automatically.
+- **Translation**: pick source and target languages in **Settings → Translation** from a searchable dropdown (e.g. source `English`, target `Thai`). Google Translate supports the widest range of languages including Thai; DeepL supports a more limited set.
+- Defaults are Japanese → English.
+
 ## Development
 
 Install Python 3.11 (recommended via [pyenv](https://github.com/pyenv/pyenv)), create a venv, and activate it.
@@ -60,13 +66,26 @@ python -m unittest
 
 ## Distribution
 
-### GitHub Actions (recommended for Mac builds)
+Releases are built and published entirely in CI via [.github/workflows/release.yml](.github/workflows/release.yml) — no local build needed.
 
-The macOS app is built in CI instead of locally, via [.github/workflows/build-macos.yml](.github/workflows/build-macos.yml):
+```sh
+sh release.sh
+```
 
-- Go to the repo's **Actions** tab → **Build macOS App** → **Run workflow**, or push a tag matching `v*` (e.g. `v1.2.0`).
-- The workflow runs on an Intel (`macos-15-intel`) runner, since the bundled binaries in `resources/bin/mac` are x86_64.
-- Once the run finishes, download the built app from the **Artifacts** section of the run (`dissolution-macos.zip`).
+This reads the version from [VERSION](VERSION), asks for confirmation, then triggers `release.yml`, which:
+
+1. **create-release** — creates a draft GitHub Release tagged `v<VERSION>` (skipped if it already exists).
+2. **build-mac** (Intel `macos-15-intel` runner, since `resources/bin/mac` binaries are x86_64) — builds the app with `build.sh`, packages it into a **DMG** (`Dissolution_<VERSION>_x86_64.dmg`) containing `Dissolution.app`, a shortcut to `/Applications`, and a **"(Important) Read This First.txt"** notice — then uploads it to the release.
+3. **build-windows** — builds the app with `build.bat`, then packages it into an installer with [Inno Setup](https://jrsoftware.org/isinfo.php) using [scripts/windows-installer.iss](scripts/windows-installer.iss) (`Dissolution_<VERSION>_x64_setup.exe` — installs to Program Files, adds Start Menu/Desktop shortcuts, registers an uninstaller, publisher listed as **Sattha5G**) — then uploads it to the release.
+4. **publish-release** — flips the release from draft to public once both builds succeed.
+
+Neither build is code-signed (no Apple Developer / Windows code-signing certificate), so first launch shows a security warning on both platforms — macOS: follow the notice inside the DMG (one-time `xattr -cr` fix); Windows: SmartScreen → **More info → Run anyway**.
+
+To bump the version before releasing:
+
+```sh
+bash bump-version.sh 1.1.0
+```
 
 ### Local build
 

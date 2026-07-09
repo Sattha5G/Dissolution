@@ -1,0 +1,477 @@
+/*
+ * Dissolution brand theme
+ * Palette: black (#0d0d0f) / yellow (#F7E603) / blue (#013559)
+ * Loaded after MDL + page CSS so it wins the cascade.
+ */
+
+:root {
+  --t-yellow: #F7E603;
+  --t-yellow-dim: rgba(247, 230, 3, 0.16);
+  --t-blue: #013559;
+  --t-blue-dark: #012740;
+  --t-blue-darker: #011b2e;
+  --t-black: #0d0d0f;
+  --t-radius-lg: 14px;
+  --t-radius-md: 10px;
+  --t-radius-sm: 8px;
+}
+
+body.dark-theme {
+  --t-surface: #131417;
+  --t-surface-2: #1a1c21;
+  --t-font: #f4f4f2;
+  --t-font-muted: rgba(244, 244, 242, 0.6);
+  --t-accent: var(--t-yellow);
+  --t-accent-contrast: #10151a;
+  --t-border: rgba(247, 230, 3, 0.18);
+  --t-hover: rgba(247, 230, 3, 0.09);
+}
+
+/* ---------- Base typography ---------- */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", "Noto Sans Thai", "Hiragino Sans", Arial, sans-serif;
+}
+
+::selection {
+  background: var(--t-yellow);
+  color: var(--t-black);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--t-blue);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--t-yellow);
+}
+
+/* ---------- Toolbars ---------- */
+
+.appToolbar {
+  width: 100%;
+  color: #fff;
+  background: linear-gradient(180deg, var(--t-blue) 0%, var(--t-blue-dark) 100%);
+  border-bottom: 2px solid var(--t-yellow);
+  padding: 2px 0;
+}
+
+.appToolbar .mdl-button--icon {
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+}
+
+.appToolbar .mdl-button--icon:hover {
+  background: var(--t-yellow-dim);
+  color: var(--t-yellow);
+}
+
+.appToolbar .mdl-button--icon[disabled] {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.appToolbar .mdl-button--icon.mdl-button--colored {
+  color: var(--t-yellow) !important;
+}
+
+/* Logs window header */
+#gameScriptLoader {
+  background: linear-gradient(180deg, var(--t-blue) 0%, var(--t-blue-dark) 100%);
+  border-bottom: 2px solid var(--t-yellow);
+}
+
+#gameScriptLoader select {
+  background: var(--t-blue-darker);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--t-radius-sm);
+  padding: 4px 8px;
+  outline: none;
+}
+
+#gameScriptLoader .mdl-button--icon {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+#gameScriptLoader .mdl-button--icon:hover {
+  color: var(--t-yellow);
+  background: var(--t-yellow-dim);
+}
+
+/* ---------- Welcome card ---------- */
+
+.welcome-card-wide.mdl-card {
+  background: var(--t-surface) !important;
+  color: var(--t-font);
+  border-radius: 0;
+}
+
+.welcome-card-wide .mdl-card__supporting-text {
+  color: var(--t-font);
+  font-size: 16px;
+  line-height: 1.6;
+  width: auto;
+}
+
+.welcome-card-wide .mdl-card__actions {
+  border-top: 1px solid var(--t-border);
+}
+
+#selectAppButton {
+  background: var(--t-yellow);
+  color: var(--t-black) !important;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  border-radius: var(--t-radius-sm);
+  padding: 0 20px;
+}
+
+#selectAppButton:hover {
+  filter: brightness(1.08);
+}
+
+/* ---------- Buttons ---------- */
+
+.mdl-button {
+  border-radius: var(--t-radius-sm);
+  text-transform: none;
+  font-weight: 600;
+}
+
+.mdl-button--icon {
+  border-radius: 50%;
+}
+
+.mdl-button--colored,
+.mdl-button--primary,
+.mdl-button--accent {
+  color: var(--t-accent) !important;
+}
+
+.mdl-button--raised.mdl-button--colored,
+.mdl-button--raised.mdl-button--accent {
+  background: var(--t-accent) !important;
+  color: var(--t-accent-contrast) !important;
+}
+
+.mdl-button:hover {
+  background-color: var(--t-hover);
+}
+
+/* ---------- Dialogs ---------- */
+
+dialog.mdl-dialog {
+  background: var(--t-surface);
+  color: var(--t-font);
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius-lg);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  padding: 0.6em 1.2em 1em 1.2em;
+}
+
+.mdl-dialog__title {
+  color: var(--t-font);
+  font-size: 22px;
+  font-weight: 700;
+  padding: 16px 8px 10px 12px;
+  border-left: 4px solid var(--t-yellow);
+  line-height: 1;
+  margin: 12px 0 0 0;
+}
+
+.mdl-dialog__content {
+  color: var(--t-font);
+}
+
+.mdl-dialog__actions .mdl-button.close {
+  color: var(--t-accent);
+  font-weight: 700;
+}
+
+dialog.mdl-dialog hr {
+  border: none;
+  border-top: 1px solid var(--t-border);
+}
+
+/* ---------- Tabs ---------- */
+
+.mdl-tabs__tab-bar {
+  border-bottom: 1px solid var(--t-border);
+  justify-content: flex-start;
+}
+
+.mdl-tabs__tab {
+  color: var(--t-font-muted);
+  text-transform: none;
+  font-weight: 600;
+  font-size: 14px;
+  outline: none;
+}
+
+.mdl-tabs.is-upgraded .mdl-tabs__tab.is-active {
+  color: var(--t-accent);
+}
+
+.mdl-tabs.is-upgraded .mdl-tabs__tab.is-active:after {
+  background: var(--t-yellow);
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+}
+
+/* ---------- Lists / settings rows ---------- */
+
+.mdl-list__item,
+.mdl-list__item-primary-content,
+.mdl-list__item-sub-title {
+  color: var(--t-font);
+}
+
+.mdl-list__item--two-line .mdl-list__item-primary-content .mdl-list__item-sub-title {
+  color: var(--t-font-muted);
+}
+
+.settingsIcon {
+  background: var(--t-blue) !important;
+  color: var(--t-yellow) !important;
+}
+
+.settingsCard,
+.settingsCard.mdl-card {
+  background: var(--t-surface-2);
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius-md);
+  box-shadow: none;
+}
+
+.settingsCard > .mdl-list > .sectionTitle {
+  color: var(--t-accent);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.tab_section_label {
+  color: var(--t-font-muted);
+}
+
+/* ---------- Text fields ---------- */
+
+.mdl-textfield__input {
+  color: var(--t-font);
+  border-bottom: 1px solid var(--t-border);
+}
+
+.mdl-textfield__label {
+  color: var(--t-font-muted);
+}
+
+.mdl-textfield--floating-label.is-focused .mdl-textfield__label,
+.mdl-textfield--floating-label.is-dirty .mdl-textfield__label,
+.mdl-textfield--floating-label.has-placeholder .mdl-textfield__label {
+  color: var(--t-accent);
+}
+
+.mdl-textfield__label:after {
+  background-color: var(--t-yellow);
+}
+
+/* Plain inputs (hotkey table) */
+#hotkey_table input {
+  background: var(--t-surface);
+  color: var(--t-font);
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius-sm);
+  padding: 6px 10px;
+  outline: none;
+}
+
+#hotkey_table input:focus {
+  border-color: var(--t-yellow);
+}
+
+/* ---------- Data tables ---------- */
+
+.mdl-data-table {
+  background: var(--t-surface-2);
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius-md);
+}
+
+.mdl-data-table th {
+  color: var(--t-accent);
+  font-weight: 700;
+}
+
+.mdl-data-table td {
+  color: var(--t-font);
+  border-top: 1px solid var(--t-border);
+  border-bottom: none;
+}
+
+/* ---------- Menus (dropdowns) ---------- */
+
+.mdl-menu {
+  background: var(--t-surface);
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius-md);
+}
+
+.mdl-menu__item {
+  color: var(--t-font);
+}
+
+.mdl-menu__item:hover {
+  background-color: var(--t-hover);
+}
+
+.mdl-menu__item[data-selected="true"],
+.mdl-menu__item.selected {
+  color: var(--t-accent);
+  font-weight: 700;
+}
+
+.getmdl-select .mdl-icon-toggle__label {
+  color: var(--t-font-muted);
+}
+
+/* ---------- Sliders ---------- */
+
+.mdl-slider__background-lower {
+  background: var(--t-yellow);
+}
+
+.mdl-slider__background-upper {
+  background: var(--t-border);
+}
+
+.mdl-slider.mdl-js-slider::-webkit-slider-thumb {
+  background: var(--t-yellow);
+}
+
+.mdl-slider.mdl-js-slider:active::-webkit-slider-thumb {
+  background-image: none;
+  background: var(--t-yellow);
+}
+
+.mdl-slider.mdl-js-slider:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 10px rgba(247, 230, 3, 0.26);
+}
+
+/* ---------- Switches ---------- */
+
+.mdl-switch.is-checked .mdl-switch__thumb {
+  background: var(--t-yellow);
+}
+
+.mdl-switch.is-checked .mdl-switch__track {
+  background: rgba(247, 230, 3, 0.5);
+}
+
+.mdl-switch.is-checked .mdl-switch__ripple-container .mdl-ripple {
+  background: var(--t-yellow);
+}
+
+/* ---------- Checkboxes ---------- */
+
+.mdl-checkbox.is-checked .mdl-checkbox__box-outline {
+  border-color: var(--t-yellow);
+}
+
+.mdl-checkbox.is-checked .mdl-checkbox__tick-outline {
+  background-color: var(--t-yellow);
+}
+
+.mdl-checkbox__label {
+  color: var(--t-font);
+}
+
+/* ---------- Tooltips ---------- */
+
+.mdl-tooltip {
+  background: var(--t-blue);
+  color: #fff;
+  border-radius: var(--t-radius-sm);
+  font-weight: 600;
+}
+
+/* ---------- Snackbar ---------- */
+
+.mdl-snackbar {
+  background: var(--t-blue-darker);
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius-md);
+}
+
+.mdl-snackbar__action {
+  color: var(--t-yellow);
+}
+
+/* ---------- Canvas context menu (image filters) ---------- */
+
+.canvasContextMenu {
+  background: rgba(1, 27, 46, 0.96);
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius-md);
+  color: #f4f4f2;
+}
+
+.canvasContextMenu .profileSelect {
+  background: var(--t-blue-darker);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--t-radius-sm);
+  padding: 4px 8px;
+}
+
+.canvasContextMenu .mdl-checkbox__label,
+.canvasContextMenu .profileSelectLabel,
+.canvasContextMenu .blurSliderLabel,
+.canvasContextMenu .binarizeSliderLabel {
+  color: #f4f4f2;
+}
+
+.canvasContextMenu .material-icons {
+  color: var(--t-yellow);
+}
+
+/* ---------- Logs window cards / tippy ---------- */
+
+.logMenuCard,
+.matchingScriptMenuCard,
+.addCardBodyContainer {
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius-md);
+}
+
+.tippy-box[data-theme~='material-light'],
+.tippy-box[data-theme~='material-light-long'] {
+  color: var(--t-font);
+  border-radius: var(--t-radius-md);
+}
+
+/* ---------- Output area (main window) ---------- */
+
+.results {
+  border-top: none;
+}
+
+#translatedOutput {
+  color: var(--t-accent);
+}
+
+/* Dictionary select in dictionary dialog */
+#dictionarySelect {
+  background: var(--t-surface-2);
+  color: var(--t-font);
+  border: 1px solid var(--t-border);
+  border-radius: var(--t-radius-sm);
+  padding: 6px 10px;
+  outline: none;
+}

@@ -21,6 +21,7 @@ const clipboardModeSwitch = document.getElementById("clipboard-mode-switch");
 // OCR Control Elements
 const OCREngineSelect = document.getElementById("ocr_engine_select");
 const OCREngineSelectContainer = document.getElementById("ocr_engine_select_container");
+const OCRLanguageSelectContainer = document.getElementById("ocr_language_select_container");
 const textOrientationSwitch = document.getElementById("text-orientation-switch");
 
 // Translation Control Elements
@@ -46,7 +47,14 @@ const removeRepeatSelect = document.getElementById('removeRepeatSelect');
 // Hotkeys
 const refreshHotkeyInput = document.getElementById('refreshHotkeyInput');
 
-initConfig();
+// Wait for window load so MDL components (sliders, switches, selects) are
+// upgraded before initConfig touches them — otherwise a fast eel response
+// kills the whole init chain (no dark theme, no engine/language setup).
+if (document.readyState === 'complete') {
+    initConfig();
+} else {
+    window.addEventListener('load', initConfig);
+}
 
 function initConfig() {
     (async () => {
@@ -56,12 +64,12 @@ function initConfig() {
             // Appearance
             const appearanceConfig = config[APPEARANCE_CONFIG];
             initFontSize(appearanceConfig['fontsize']);
-            initDarkTheme(appearanceConfig['darktheme']);
             selectionColor = appearanceConfig['selection_color']
             selectionLineWidth = appearanceConfig['selection_line_width'];
             // OCR
             const ocrConfig = config[OCR_CONFIG];
             initOCREngine(ocrConfig['engine']);
+            initOCRLanguage(ocrConfig['tesseract_language']);
             // Translation
             const translationConfig = config[TRANSLATION_CONFIG];
             initTranslation(translationConfig['translation_service'])
@@ -99,13 +107,6 @@ function initFontSize(fontSize) {
     fontSizeSlider.MaterialSlider.change(fontSize);
 }
 
-function initDarkTheme(darkTheme) {
-    if (darkTheme === 'true') {
-        toggleDarkTheme();
-        document.getElementById("dark-theme-switch").parentElement.MaterialSwitch.on();
-    }
-}
-
 function initOCREngine(engine) {
     if (engine) {
         OCREngine = engine;
@@ -119,6 +120,36 @@ function initOCREngine(engine) {
             defaultOption.setAttribute('data-selected', true);
         }
         getmdlSelect.init('#ocr_engine_select_container');
+    }
+}
+
+async function initOCRLanguage(currentLanguage) {
+    try {
+        const languages = await eel.get_ocr_languages()();
+        const optionList = OCRLanguageSelectContainer.querySelector("ul");
+        optionList.innerHTML = '';
+        languages.forEach(language => {
+            const option = document.createElement('li');
+            option.classList.add('mdl-menu__item');
+            option.setAttribute('data-val', language.code);
+            option.innerText = language.name;
+            if (language.code === currentLanguage) {
+                option.setAttribute('data-selected', true);
+            }
+            optionList.append(option);
+        });
+        getmdlSelect.init('#ocr_language_select_container');
+    } catch (error) {
+        console.error('Failed to load OCR languages', error);
+    }
+}
+
+function updateOCRLanguageAndPersist() {
+    const selectedCode = OCRLanguageSelectContainer.querySelector('input[type="hidden"]').value;
+    if (selectedCode && currentConfig[OCR_CONFIG]['tesseract_language'] !== selectedCode) {
+        currentConfig[OCR_CONFIG]['tesseract_language'] = selectedCode;
+        eel.update_config(OCR_CONFIG, { 'tesseract_language': selectedCode, 'ocr_space_language': selectedCode })();
+        refreshOCR();
     }
 }
 
@@ -144,12 +175,94 @@ function initTranslation(service) {
     }
 }
 
+// Language catalog for translation (Google Translate codes)
+const TRANSLATION_LANGUAGES = [
+    { code: 'ar', name: 'Arabic' },
+    { code: 'bn', name: 'Bengali' },
+    { code: 'zh-CN', name: 'Chinese (Simplified)' },
+    { code: 'zh-TW', name: 'Chinese (Traditional)' },
+    { code: 'cs', name: 'Czech' },
+    { code: 'da', name: 'Danish' },
+    { code: 'nl', name: 'Dutch' },
+    { code: 'en', name: 'English' },
+    { code: 'tl', name: 'Filipino' },
+    { code: 'fi', name: 'Finnish' },
+    { code: 'fr', name: 'French' },
+    { code: 'de', name: 'German' },
+    { code: 'el', name: 'Greek' },
+    { code: 'iw', name: 'Hebrew' },
+    { code: 'hi', name: 'Hindi' },
+    { code: 'hu', name: 'Hungarian' },
+    { code: 'id', name: 'Indonesian' },
+    { code: 'it', name: 'Italian' },
+    { code: 'ja', name: 'Japanese' },
+    { code: 'km', name: 'Khmer' },
+    { code: 'ko', name: 'Korean' },
+    { code: 'lo', name: 'Lao' },
+    { code: 'ms', name: 'Malay' },
+    { code: 'my', name: 'Myanmar (Burmese)' },
+    { code: 'no', name: 'Norwegian' },
+    { code: 'fa', name: 'Persian' },
+    { code: 'pl', name: 'Polish' },
+    { code: 'pt', name: 'Portuguese' },
+    { code: 'ro', name: 'Romanian' },
+    { code: 'ru', name: 'Russian' },
+    { code: 'es', name: 'Spanish' },
+    { code: 'sv', name: 'Swedish' },
+    { code: 'th', name: 'Thai' },
+    { code: 'tr', name: 'Turkish' },
+    { code: 'uk', name: 'Ukrainian' },
+    { code: 'vi', name: 'Vietnamese' },
+];
+
+function populateLanguageDatalists() {
+    const sourceOptions = document.getElementById('source_language_options');
+    const targetOptions = document.getElementById('target_language_options');
+    const addOption = (list, name, code) => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.label = code;
+        list.append(option);
+    };
+    addOption(sourceOptions, 'Auto Detect', 'auto');
+    TRANSLATION_LANGUAGES.forEach(language => {
+        addOption(sourceOptions, language.name, language.code);
+        addOption(targetOptions, language.name, language.code);
+    });
+}
+populateLanguageDatalists();
+
+// Accepts a language name ("Thai") or code ("th"); returns the code or null
+function languageCodeFromInput(value, allowAuto) {
+    const trimmed = value.trim().toLowerCase();
+    if (!trimmed) {
+        return null;
+    }
+    if (allowAuto && (trimmed === 'auto' || trimmed === 'auto detect')) {
+        return 'auto';
+    }
+    const match = TRANSLATION_LANGUAGES.find(language =>
+        language.name.toLowerCase() === trimmed || language.code.toLowerCase() === trimmed);
+    return match ? match.code : null;
+}
+
+function languageNameFromCode(code) {
+    if (!code) {
+        return '';
+    }
+    if (code === 'auto') {
+        return 'Auto Detect';
+    }
+    const match = TRANSLATION_LANGUAGES.find(language => language.code.toLowerCase() === code.toLowerCase());
+    return match ? match.name : code;
+}
+
 function initSetTranslationLanguages({ sourceLang, targetLang }) {
     sourceLanguage = sourceLang;
-    sourceLanguageInput.parentElement.MaterialTextfield.change(sourceLang);
+    sourceLanguageInput.parentElement.MaterialTextfield.change(languageNameFromCode(sourceLang));
 
     targetLanguage = targetLang;
-    targetLanguageInput.parentElement.MaterialTextfield.change(targetLang);
+    targetLanguageInput.parentElement.MaterialTextfield.change(languageNameFromCode(targetLang));
 }
 
 function updateTranslationServiceAndPersist() {
@@ -160,15 +273,28 @@ function updateTranslationServiceAndPersist() {
 }
 
 function changeSourceLanguage() {
-    if (sourceLanguageInput.value) {
-        eel.update_config(TRANSLATION_CONFIG, { 'source_lang': sourceLanguageInput.value })();
+    const translationConfig = currentConfig[TRANSLATION_CONFIG] || {};
+    const code = languageCodeFromInput(sourceLanguageInput.value, true);
+    if (code) {
+        sourceLanguage = code;
+        translationConfig['source_lang'] = code;
+        eel.update_config(TRANSLATION_CONFIG, { 'source_lang': code })();
     }
+    // Normalize the display (or revert it if the input wasn't a known language)
+    sourceLanguageInput.parentElement.MaterialTextfield.change(
+        languageNameFromCode(translationConfig['source_lang']));
 }
 
 function changeTargetLanguage() {
-    if (sourceLanguageInput.value) {
-        eel.update_config(TRANSLATION_CONFIG, { 'target_lang': targetLanguageInput.value })();
+    const translationConfig = currentConfig[TRANSLATION_CONFIG] || {};
+    const code = languageCodeFromInput(targetLanguageInput.value, false);
+    if (code) {
+        targetLanguage = code;
+        translationConfig['target_lang'] = code;
+        eel.update_config(TRANSLATION_CONFIG, { 'target_lang': code })();
     }
+    targetLanguageInput.parentElement.MaterialTextfield.change(
+        languageNameFromCode(translationConfig['target_lang']));
 }
 
 /*
@@ -216,15 +342,6 @@ function updateFontSizeAndPersist(slideAmount) {
     updateFontSize(slideAmount);
     eel.update_config(APPEARANCE_CONFIG, { 'fontsize': slideAmount })();
 }
-function toggleDarkTheme() {
-    document.body.classList.toggle("dark-theme");
-}
-function toggleDarkThemeAndPersist() {
-    toggleDarkTheme();
-    darkTheme = document.body.classList.contains('dark-theme');
-    eel.update_config(APPEARANCE_CONFIG, { 'darktheme': darkTheme ? 'true' : 'false' })();
-}
-
 /*
  *
  OCR Settings 

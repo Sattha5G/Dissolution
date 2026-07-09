@@ -1,0 +1,37 @@
+====================================================
+  วิธีติดตั้ง Dissolution / How to Install Dissolution
+====================================================
+
+Dissolution เป็นโปรเจกต์ส่วนตัว ไม่ได้จ่ายค่าลงทะเบียน
+Apple Developer ปีละ 99 เหรียญฯ เพื่อเซ็นรับรองแอปฯ
+ทำให้ macOS จะมองว่าโปรแกรมนี้เป็นอันตราย ไม่ยอมให้เปิด
+
+วิธีแก้ ทำแค่ครั้งเดียว:
+
+  1. ลากไอคอน Dissolution เข้าไปไว้ในโฟลเดอร์ Applications
+
+  2. เปิดแอปฯ Terminal ในเครื่อง
+     ก๊อปคำสั่งด้านล่างนี้ไปวาง แล้วกด Enter
+
+xattr -cr /Applications/Dissolution.app
+
+  3. เปิด Dissolution ได้ตามปกติเลย ไม่ต้องทำซ้ำอีกค้าบ
+  (แต่ถ้าอัปเดตเป็นเวอร์ชันใหม่ ต้องรันใหม่อีกรอบ)
+
+====================================================
+
+Dissolution is a personal project, so it isn't signed with
+an Apple Developer certificate ($99/year). Because of that,
+macOS will flag it as "damaged" or "unidentified developer"
+and refuse to open it.
+
+One-time fix:
+
+  1. Drag Dissolution into your Applications folder.
+
+  2. Open Terminal and paste this command, then press Enter:
+
+xattr -cr /Applications/Dissolution.app
+
+  3. Done! Dissolution will open normally from now on.
+  (Unless you update to a new version — you'll need to run this again.)

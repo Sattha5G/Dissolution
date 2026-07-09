@@ -1,0 +1,136 @@
+name: Build & Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(cat VERSION)
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create release if not exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          VERSION="${TAG#v}"
+          if ! gh release view "$TAG" &>/dev/null; then
+            cat > release_notes.md << NOTES
+          ## Dissolution $TAG
+
+          ### ดาวน์โหลด
+
+          | Platform | ไฟล์ |
+          |---|---|
+          | **macOS** (Intel) | \`Dissolution_${VERSION}_x86_64.dmg\` |
+          | **Windows** x64 | \`Dissolution_${VERSION}_x64_setup.exe\` |
+
+          > **macOS:** เปิดไฟล์ **"(Important) Read This First.txt"** ใน DMG เพื่อดูวิธีติดตั้ง
+          NOTES
+            gh release create "$TAG" \
+              --title "Dissolution $TAG" \
+              --draft \
+              --notes-file release_notes.md
+          fi
+
+  build-mac:
+    needs: create-release
+    # Intel runner: resources/bin/mac binaries (tesseract etc.) are bundled as x86_64
+    runs-on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11.9"
+          architecture: x64
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build app
+        run: sh build.sh
+
+      - name: Create DMG
+        run: |
+          VERSION=$(cat VERSION)
+          mkdir dmg_staging
+          cp -r dist/dissolution.app dmg_staging/
+          cp "scripts/(Important) Read This First.txt" dmg_staging/
+          ln -s /Applications dmg_staging/Applications
+          hdiutil create \
+            -volname "Dissolution" \
+            -srcfolder dmg_staging \
+            -ov -format UDZO \
+            "Dissolution_${VERSION}_x86_64.dmg"
+
+      - name: Upload DMG
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ needs.create-release.outputs.tag }}" \
+            Dissolution_*_x86_64.dmg --clobber
+
+  build-windows:
+    needs: create-release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11.9"
+          architecture: x64
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build app
+        run: build.bat
+        shell: cmd
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+        shell: cmd
+
+      - name: Build installer
+        shell: bash
+        run: |
+          VERSION=$(cat VERSION)
+          "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" "/DMyAppVersion=$VERSION" scripts/windows-installer.iss
+
+      - name: Upload installer
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(cat VERSION)
+          gh release upload "${{ needs.create-release.outputs.tag }}" \
+            "dist_installer/Dissolution_${VERSION}_x64_setup.exe" --clobber
+
+  publish-release:
+    needs: [create-release, build-mac, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit "${{ needs.create-release.outputs.tag }}" \
+            --draft=false --repo ${{ github.repository }}

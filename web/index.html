@@ -26,8 +26,9 @@
 </head>
 
 <link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="theme.css">
 
-<body onresize="browserOnResize()">
+<body onresize="browserOnResize()" class="dark-theme">
   <!-- <h4>Dissolution</h4> -->
   <div class="container">
     <video id="video" class="streamVideo" autoplay onplay="videoOnLoad(this)"></video>
@@ -119,7 +120,7 @@
     </div>
 
     <div id="gameToolbar">
-      <div style="background: #2e2e2e; color: white; width: 100%">
+      <div class="appToolbar">
         <button id="minimizeButton" onclick="toggleCollapseVideo()" style="margin-left: 12px"
           class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">keyboard_arrow_down</i>
@@ -144,7 +145,7 @@
     </div>
 
     <div id="outputToolbar">
-      <div style="background: #2e2e2e; color: white; width: 100%">
+      <div class="appToolbar">
         <button disabled id="refreshButton" onclick="refreshOCR()" style="margin-left: 12px"
           class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">refresh</i>
@@ -228,18 +229,6 @@
                         value="24" tabindex="0" onchange="updateFontSizeAndPersist(this.value)">
                     </span>
                   </li>
-                  <li class="mdl-list__item">
-                    <span class="mdl-list__item-primary-content">
-                      <i class="settingsIcon material-icons mdl-list__item-avatar">invert_colors</i>
-                      <span>Dark Theme</span>
-                    </span>
-                    <span class="mdl-list__item-secondary-action">
-                      <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="dark-theme-switch">
-                        <input type="checkbox" onclick="toggleDarkThemeAndPersist()" id="dark-theme-switch"
-                          class="mdl-switch__input" />
-                      </label>
-                    </span>
-                  </li>
                 </ul>
               </div>
 
@@ -266,6 +255,22 @@
                           <li class="mdl-menu__item" data-val="tesseract_legacy">Tesseract Legacy</li>
                           <li class="mdl-menu__item" data-val="ocr_space_na">OCR Space NA</li>
                           <li class="mdl-menu__item" data-val="ocr_space_eu">OCR Space EU</li>
+                        </ul>
+                      </div>
+                    </span>
+                  </li>
+
+                  <li class="mdl-list__item">
+                    <span class="mdl-list__item-primary-content">
+                      <i class="settingsIcon material-icons mdl-list__item-avatar">language</i>
+                      <div id="ocr_language_select_container"
+                        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__foix-height">
+                        <input onchange="updateOCRLanguageAndPersist()" style="padding-top: 8px" type="text" value=""
+                          class="mdl-textfield__input" id="ocr_language_select" readonly>
+                        <input type="hidden" value="" name="ocr_language_select">
+                        <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                        <label for="ocr_language_select" class="mdl-textfield__label">OCR Language</label>
+                        <ul for="ocr_language_select" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
                         </ul>
                       </div>
                     </span>
@@ -351,8 +356,10 @@
                     <i class="settingsIcon material-icons mdl-list__item-avatar">translate</i>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                       <input onchange="changeSourceLanguage()" class="mdl-textfield__input" type="text"
-                        id="source_language_input">
-                      <label class="mdl-textfield__label" for="sample4">Source Language</label>
+                        id="source_language_input" list="source_language_options" placeholder="Type to search…"
+                        autocomplete="off">
+                      <datalist id="source_language_options"></datalist>
+                      <label class="mdl-textfield__label" for="source_language_input">Source Language</label>
                     </div>
                   </span>
                 </li>
@@ -362,8 +369,10 @@
                     <i class="settingsIcon material-icons mdl-list__item-avatar">language</i>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                       <input onchange="changeTargetLanguage()" class="mdl-textfield__input" type="text"
-                        id="target_language_input">
-                      <label class="mdl-textfield__label" for="sample4">Target Language</label>
+                        id="target_language_input" list="target_language_options" placeholder="Type to search…"
+                        autocomplete="off">
+                      <datalist id="target_language_options"></datalist>
+                      <label class="mdl-textfield__label" for="target_language_input">Target Language</label>
                     </div>
                   </span>
                 </li>

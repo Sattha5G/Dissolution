@@ -4,38 +4,25 @@ html {
 
 :root {
     --white: #f8f8f8;
-    --black: #121212;
-    --dark: #2e2e2e;
+    --black: #0d0d0f;
+    --dark: #16161a;
     --light-gray: #BDBDBD;
     --gray: #eee;
-    --purple: rgb(103, 58, 183);
-    --purple-50: rgb(242, 231, 254);
-    --purple-100: rgb(219, 178, 255);
-    --purple-200: rgb(187, 134, 252);
-    --purple-700: rgb(55, 0, 179);
-}
-
-.light-theme {
-    --primary: var(--purple);
-    --mainBg: var(--white);
-    --secondaryBg: var(--gray);
-    --iconButton: var(--purple);
-    --header: var(--purple);
-    --dialogBg: var(--white);
-    --focus: var(--gray);
-    --disabled: var(--light-gray);
-    --fontColor: var(--black);
+    --brand-yellow: #F7E603;
+    --brand-blue: #013559;
+    --brand-blue-dark: #012740;
+    --brand-blue-darker: #011b2e;
 }
 
 .dark-theme {
-    --primary: var(--purple);
+    --primary: var(--brand-yellow);
     --mainBg: var(--black);
-    --secondaryBg: var(--dark);
-    --iconButton: var(--purple-200);
-    --header: var(--dark);
+    --secondaryBg: var(--brand-blue-darker);
+    --iconButton: var(--brand-yellow);
+    --header: var(--brand-blue);
     --dialogBg: var(--dark);
-    --focus: var(--purple);
-    --disabled: var(--black);
+    --focus: var(--brand-blue-dark);
+    --disabled: #555;
     --fontColor: var(--white);
 }
 
@@ -85,11 +72,6 @@ body {
 span,
 select {
     padding-right: 10px
-}
-
-#toggleDarkThemeButton {
-    margin-left: auto;
-    right: 15px;
 }
 
 .logItem {
@@ -173,7 +155,7 @@ select {
 }
 
 .note-add-icon:hover {
-    color: #E21549
+    color: var(--brand-yellow);
 }
 
 .playAudioButton {

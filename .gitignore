@@ -68,3 +68,5 @@ Thumbs.db
 # Image files
 *.jpg
 *.png
+!web/static/dissolution-banner.png
+!web/static/dissolution-icon.png

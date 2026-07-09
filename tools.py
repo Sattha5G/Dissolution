@@ -43,6 +43,48 @@ def get_tessdata_dir():
             os.rename(Path(WIN_TESSERACT_DIR, "tessdata-new"), Path(WIN_TESSERACT_DIR, "tessdata"))
     return ''
 
+OCR_LANGUAGE_NAMES = {
+    'jpn': 'Japanese',
+    'eng': 'English',
+    'tha': 'Thai',
+    'kor': 'Korean',
+    'chi_sim': 'Chinese (Simplified)',
+    'chi_tra': 'Chinese (Traditional)',
+    'fra': 'French',
+    'deu': 'German',
+    'spa': 'Spanish',
+}
+
+NON_LANGUAGE_TRAINEDDATA = {'osd', 'snum'}
+
+def get_tessdata_path():
+    platform_name = platform.system()
+    if platform_name == 'Darwin':
+        return Path(OSX_TESSERACT_DIR, "share", "tessdata")
+    elif platform_name == 'Windows':
+        return Path(WIN_TESSERACT_DIR, "tessdata")
+    return None
+
+def get_ocr_language_options():
+    tessdata_path = get_tessdata_path()
+    codes = []
+    if tessdata_path is not None and tessdata_path.is_dir():
+        for traineddata in sorted(tessdata_path.glob('*.traineddata')):
+            code = traineddata.stem
+            if code in NON_LANGUAGE_TRAINEDDATA or code.endswith('_vert'):
+                continue
+            codes.append(code)
+    if not codes:
+        # Linux uses the system tesseract; fall back to the languages this app ships with
+        codes = ['jpn', 'eng']
+    return [{'code': code, 'name': OCR_LANGUAGE_NAMES.get(code, code)} for code in codes]
+
+def has_vertical_traineddata(language):
+    tessdata_path = get_tessdata_path()
+    if tessdata_path is None:
+        return language == 'jpn'
+    return Path(tessdata_path, language + '_vert.traineddata').exists()
+
 def path_to_textractor():
     path = r_config('PATHS', 'textractor')
     return path if path != 'default' else str(Path(bundle_dir, 'resources', 'bin', 'win', 'textractor', 'TextractorCLI.exe'))

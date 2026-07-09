@@ -49,5 +49,7 @@ def deepl_translate(text):
 
 def google_translate(text):
     # ts.preaccelerate()
-    result = ts.translate_text(text, 'google')
+    source_lang = r_config(TRANSLATION_CONFIG, "source_lang") or 'auto'
+    target_lang = r_config(TRANSLATION_CONFIG, "target_lang") or 'en'
+    result = ts.translate_text(text, 'google', from_language=source_lang, to_language=target_lang)
     return result

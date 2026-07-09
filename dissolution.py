@@ -7,7 +7,7 @@ from translate import multi_translate
 from hotkeys import hotkey_map
 from util import RepeatedTimer, create_directory_if_not_exists, get_default_browser_name, get_PID_list, format_output
 from textractor import Textractor
-from tools import path_to_textractor, open_folder_textractor_path
+from tools import path_to_textractor, open_folder_textractor_path, get_ocr_language_options
 from pynput import keyboard
 from clipboard import clipboard_to_output, text_to_clipboard
 from logger import get_time_string, log_text, log_media, update_log_text
@@ -28,9 +28,13 @@ def close(page, sockets):
     if not sockets:
       os._exit(0)
 
-@eel.expose     
+@eel.expose
 def recognize_image(engine, image, orientation):
     return detect_and_log(engine, image, orientation, session_start_time, get_time_string())
+
+@eel.expose
+def get_ocr_languages():
+    return get_ocr_language_options()
 
 @eel.expose
 def log_output(text):
